@@ -1,0 +1,59 @@
+name: MLflow CI Pipeline - Skilled (Cyberbullying Detection)
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  train-model:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.10'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install mlflow==3.8.1 tensorflow==2.19.0 numpy matplotlib seaborn scikit-learn
+    
+    - name: Run MLflow Project (SKILLED requirement)
+      run: |
+        mlflow run MLProject --env-manager local
+    
+    - name: Upload MLflow artifacts to GitHub (SKILLED requirement)
+      uses: actions/upload-artifact@v4
+      with:
+        name: mlflow-cyberbullying-artifacts
+        path: |
+          mlruns/
+          MLProject/
+          *.png
+          *.txt
+          *.npy
+          *.h5
+          *.keras
+        retention-days: 30
+    
+    - name: Create artifact summary
+      run: |
+        echo "## MLflow Cyberbullying Detection Training Complete" >> $GITHUB_STEP_SUMMARY
+        echo "### Artifacts Generated:" >> $GITHUB_STEP_SUMMARY
+        echo "- LSTM Model (.keras, .h5)" >> $GITHUB_STEP_SUMMARY
+        echo "- Training Metrics" >> $GITHUB_STEP_SUMMARY
+        echo "- Confusion Matrix" >> $GITHUB_STEP_SUMMARY
+        echo "- Classification Report" >> $GITHUB_STEP_SUMMARY
+        echo "- Training Curves" >> $GITHUB_STEP_SUMMARY
+        echo "- MLflow Tracking Data" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "Project: Cyberbullying Text Classification" >> $GITHUB_STEP_SUMMARY
+        echo "Model: LSTM with Embedding Layer" >> $GITHUB_STEP_SUMMARY
+        echo "Target Classes: age, ethnicity, gender, religion" >> $GITHUB_STEP_SUMMARY

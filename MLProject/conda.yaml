@@ -1,0 +1,14 @@
+name: mlflow-cyberbullying-env
+channels:
+  - defaults
+  - conda-forge
+dependencies:
+  - python=3.10
+  - pip
+  - pip:
+    - mlflow==3.8.1
+    - tensorflow==2.19.0
+    - numpy>=2.0.2
+    - matplotlib
+    - seaborn
+    - scikit-learn
