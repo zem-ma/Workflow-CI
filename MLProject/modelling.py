@@ -19,33 +19,67 @@ print(f"Test samples: {len(padded_test)}")
 print(f"Max length: {max_len}, Num classes: {num_classes}")
 
 # Enable autolog
+# mlflow.tensorflow.autolog()
+
+# with mlflow.start_run():
+#     model = tf.keras.Sequential([
+#         tf.keras.layers.Input(shape=(max_len,)),
+#         tf.keras.layers.Embedding(10000, 16),
+#         tf.keras.layers.LSTM(64),
+#         tf.keras.layers.Dense(128, activation='relu'),
+#         tf.keras.layers.Dropout(0.5),
+#         tf.keras.layers.Dense(num_classes, activation='softmax')
+#     ])
+    
+#     model.compile(
+#         optimizer=tf.keras.optimizers.Adam(learning_rate=0.00146),
+#         loss='categorical_crossentropy',
+#         metrics=['accuracy']
+#     )
+    
+#     model.fit(padded_latih, labels_latih, 
+#               batch_size=32, 
+#               epochs=10, 
+#               validation_split=0.1,
+#               verbose=1)
+    
+#     y_pred = model.predict(padded_test)
+#     y_pred_classes = np.argmax(y_pred, axis=1)
+#     y_test_classes = np.argmax(labels_test, axis=1)
+    
+#     accuracy = accuracy_score(y_test_classes, y_pred_classes)
+#     print(f"Accuracy: {accuracy:.4f}")
+
+
 mlflow.tensorflow.autolog()
 
-with mlflow.start_run():
-    model = tf.keras.Sequential([
-        tf.keras.layers.Input(shape=(max_len,)),
-        tf.keras.layers.Embedding(10000, 16),
-        tf.keras.layers.LSTM(64),
-        tf.keras.layers.Dense(128, activation='relu'),
-        tf.keras.layers.Dropout(0.5),
-        tf.keras.layers.Dense(num_classes, activation='softmax')
-    ])
-    
-    model.compile(
-        optimizer=tf.keras.optimizers.Adam(learning_rate=0.00146),
-        loss='categorical_crossentropy',
-        metrics=['accuracy']
-    )
-    
-    model.fit(padded_latih, labels_latih, 
-              batch_size=32, 
-              epochs=10, 
-              validation_split=0.1,
-              verbose=1)
-    
-    y_pred = model.predict(padded_test)
-    y_pred_classes = np.argmax(y_pred, axis=1)
-    y_test_classes = np.argmax(labels_test, axis=1)
-    
-    accuracy = accuracy_score(y_test_classes, y_pred_classes)
-    print(f"Accuracy: {accuracy:.4f}")
+model = tf.keras.Sequential([
+    tf.keras.layers.Input(shape=(max_len,)),
+    tf.keras.layers.Embedding(10000, 16),
+    tf.keras.layers.LSTM(64),
+    tf.keras.layers.Dense(128, activation='relu'),
+    tf.keras.layers.Dropout(0.5),
+    tf.keras.layers.Dense(num_classes, activation='softmax')
+])
+
+model.compile(
+    optimizer=tf.keras.optimizers.Adam(learning_rate=0.00146),
+    loss='categorical_crossentropy',
+    metrics=['accuracy']
+)
+
+model.fit(
+    padded_latih,
+    labels_latih,
+    batch_size=32,
+    epochs=10,
+    validation_split=0.1,
+    verbose=1
+)
+
+y_pred = model.predict(padded_test)
+y_pred_classes = np.argmax(y_pred, axis=1)
+y_test_classes = np.argmax(labels_test, axis=1)
+
+accuracy = accuracy_score(y_test_classes, y_pred_classes)
+print(f"Accuracy: {accuracy:.4f}")
